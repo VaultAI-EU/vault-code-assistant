@@ -1069,7 +1069,7 @@ export const models: { [key: string]: ModelPackage } = {
   commandA032025: {
     title: "Command A 03-2025",
     description:
-      "Command A is Cohere’s most performant model to date, excelling at real world enterprise tasks including tool use, retrieval augmented generation (RAG), agents, and multilingual use cases.",
+      "Command A is Cohere's most performant model to date, excelling at real world enterprise tasks including tool use, retrieval augmented generation (RAG), agents, and multilingual use cases.",
     params: {
       model: "command-a-03-2025",
       contextLength: 256_000,
@@ -2145,6 +2145,53 @@ export const models: { [key: string]: ModelPackage } = {
     } as any,
     providerOptions: [],
     isOpenSource: false,
+  },
+
+  // AWS Bedrock Models
+
+  // Claude models via AWS Bedrock
+  bedrockClaudeSonnet45: {
+    title: "Claude Sonnet 4.5",
+    description: "Anthropic's most intelligent model via AWS Bedrock",
+    params: {
+      model: "anthropic.claude-sonnet-4-5-20250514-v1:0",
+      contextLength: 200_000,
+    },
+    icon: "anthropic.png",
+    isOpenSource: false,
+  },
+  bedrockClaudeHaiku45: {
+    title: "Claude Haiku 4.5",
+    description:
+      "Fast frontier performance via AWS Bedrock - optimal for production",
+    params: {
+      model: "anthropic.claude-haiku-4-5-20251001-v1:0",
+      contextLength: 200_000,
+    },
+    icon: "anthropic.png",
+    isOpenSource: false,
+  },
+
+  // Llama models via AWS Bedrock
+  bedrockLlamaLarge: {
+    title: "Meta Llama 3.3 (70B)",
+    description: "Meta Llama 3.3 70B via AWS Bedrock",
+    params: {
+      model: "meta.llama3-3-70b-instruct-v1:0",
+      contextLength: 8192,
+    },
+    icon: "meta.png",
+    isOpenSource: true,
+  },
+  bedrockLlamaSmall: {
+    title: "Meta Llama 3.1 (405B)",
+    description: "Meta Llama 3.1 405B via AWS Bedrock",
+    params: {
+      model: "meta.llama3-1-405b-instruct-v1:0",
+      contextLength: 128_000,
+    },
+    icon: "meta.png",
+    isOpenSource: true,
   },
 
   // CometAPI Models

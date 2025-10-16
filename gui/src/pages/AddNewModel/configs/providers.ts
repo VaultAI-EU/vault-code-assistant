@@ -49,6 +49,70 @@ export const apiBaseInput: InputDescriptor = {
 };
 
 export const providers: Partial<Record<string, ProviderInfo>> = {
+  bedrock: {
+    title: "AWS Bedrock",
+    provider: "bedrock",
+    description: "Use Claude, Llama, and other models via AWS Bedrock",
+    longDescription:
+      "Access AI models through AWS Bedrock. Use IAM credentials (Access Key + Secret) or leave empty to use ~/.aws/credentials profile.",
+    icon: "anthropic.png",
+    tags: [],
+    params: {
+      region: "us-east-1",
+      profile: "bedrock",
+    },
+    collectInputFor: [
+      {
+        inputType: "text",
+        key: "region",
+        label: "AWS Region",
+        placeholder: "us-east-1",
+        required: true,
+        defaultValue: "us-east-1",
+      },
+      {
+        inputType: "text",
+        key: "profile",
+        label: "AWS Profile",
+        placeholder: "bedrock",
+        required: true,
+        defaultValue: "bedrock",
+        description: "Profile name from ~/.aws/credentials (or leave default)",
+      },
+      {
+        inputType: "text",
+        key: "accessKeyId",
+        label: "Access Key ID (Optional)",
+        placeholder: "Leave empty to use profile",
+        required: true,
+        defaultValue: "",
+      },
+      {
+        inputType: "password",
+        key: "secretAccessKey",
+        label: "Secret Key (Optional)",
+        placeholder: "Leave empty to use profile",
+        required: true,
+        defaultValue: "",
+      },
+      ...completionParamsInputsConfigs,
+    ],
+    packages: [
+      // Claude 4.5 models
+      models.bedrockClaudeSonnet45,
+      models.bedrockClaudeHaiku45,
+      // Llama models
+      models.bedrockLlamaLarge,
+      models.bedrockLlamaSmall,
+      // Autodetect
+      {
+        ...models.AUTODETECT,
+        params: { ...models.AUTODETECT.params, title: "AWS Bedrock" },
+      },
+    ],
+    refPage:
+      "https://docs.vaultai.eu/customize/model-providers/top-level/bedrock",
+  },
   cometapi: {
     title: "CometAPI",
     provider: "cometapi",

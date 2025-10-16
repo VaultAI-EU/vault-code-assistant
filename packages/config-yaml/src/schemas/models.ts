@@ -164,6 +164,11 @@ const baseModelFields = {
     .record(z.string(), z.union([z.string(), z.boolean(), z.number()]))
     .optional(),
   autocompleteOptions: autocompleteOptionsSchema.optional(),
+  // AWS Bedrock options
+  region: z.string().optional(),
+  profile: z.string().optional(),
+  accessKeyId: z.string().optional(),
+  secretAccessKey: z.string().optional(),
 };
 
 export const modelSchema = z.union([

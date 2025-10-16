@@ -1661,6 +1661,8 @@ export interface JSONModelDescription {
   region?: string;
   profile?: string;
   modelArn?: string;
+  accessKeyId?: string;
+  secretAccessKey?: string;
   apiType?: "openai" | "azure";
   apiVersion?: string;
   deployment?: string;

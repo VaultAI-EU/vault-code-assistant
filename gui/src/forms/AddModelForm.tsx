@@ -85,6 +85,15 @@ export function AddModelForm({
 
   useEffect(() => {
     setSelectedModel(selectedProvider.packages[0]);
+
+    // Initialize form with default values from provider
+    const defaultValues: Record<string, any> = {};
+    for (let input of selectedProvider.collectInputFor ?? []) {
+      if (input.defaultValue !== undefined) {
+        defaultValues[input.key] = input.defaultValue;
+        formMethods.setValue(input.key, input.defaultValue);
+      }
+    }
   }, [selectedProvider]);
 
   function onSubmit() {
@@ -93,13 +102,17 @@ export function AddModelForm({
 
     const reqInputFields: Record<string, any> = {};
     for (let input of selectedProvider.collectInputFor ?? []) {
-      reqInputFields[input.key] = formMethods.watch(input.key);
+      const value = formMethods.watch(input.key);
+      // Include the field value if it's been filled in by the user
+      if (value !== undefined && value !== "") {
+        reqInputFields[input.key] = value;
+      }
     }
 
     const model = {
-      ...selectedProvider.params,
+      ...selectedProvider.params, // This includes region and profile defaults
       ...selectedModel.params,
-      ...reqInputFields,
+      ...reqInputFields, // This overrides with user input if provided
       provider: selectedProvider.provider,
       title: selectedModel.title,
       ...(hasValidApiKey ? { apiKey } : {}),

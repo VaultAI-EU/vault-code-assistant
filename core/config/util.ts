@@ -78,6 +78,13 @@ export function addModel(
         apiBase: model.apiBase,
         maxStopWords: model.maxStopWords,
         defaultCompletionOptions: model.completionOptions,
+        // AWS Bedrock options
+        ...(model.region && { region: model.region }),
+        ...(model.profile && { profile: model.profile }),
+        ...(model.accessKeyId && { accessKeyId: model.accessKeyId }),
+        ...(model.secretAccessKey && {
+          secretAccessKey: model.secretAccessKey,
+        }),
       };
       config.models.push(desc);
       return config;
