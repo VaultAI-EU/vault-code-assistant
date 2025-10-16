@@ -2149,26 +2149,49 @@ export const models: { [key: string]: ModelPackage } = {
 
   // AWS Bedrock Models
 
-  // Claude models via AWS Bedrock
+  // Claude models via AWS Bedrock (US regions)
   bedrockClaudeSonnet45: {
-    title: "Claude Sonnet 4.5",
-    description: "Anthropic's most intelligent model via AWS Bedrock",
+    title: "Claude Sonnet 4.5 (US)",
+    description:
+      "Anthropic's most intelligent model via AWS Bedrock (US regions)",
     params: {
-      model: "anthropic.claude-sonnet-4-5-20250514-v1:0",
+      model: "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
       contextLength: 200_000,
     },
-    icon: "anthropic.png",
+    icon: "bedrock.png",
     isOpenSource: false,
   },
   bedrockClaudeHaiku45: {
-    title: "Claude Haiku 4.5",
-    description:
-      "Fast frontier performance via AWS Bedrock - optimal for production",
+    title: "Claude Haiku 4.5 (US)",
+    description: "Fast frontier performance via AWS Bedrock (US regions)",
     params: {
-      model: "anthropic.claude-haiku-4-5-20251001-v1:0",
+      model: "us.anthropic.claude-haiku-4-5-20251001-v1:0",
       contextLength: 200_000,
     },
-    icon: "anthropic.png",
+    icon: "bedrock.png",
+    isOpenSource: false,
+  },
+
+  // Claude models via AWS Bedrock (EU regions)
+  bedrockClaudeSonnet45EU: {
+    title: "Claude Sonnet 4.5 (EU)",
+    description:
+      "Anthropic's most intelligent model via AWS Bedrock (EU regions)",
+    params: {
+      model: "eu.anthropic.claude-sonnet-4-5-20250929-v1:0",
+      contextLength: 200_000,
+    },
+    icon: "bedrock.png",
+    isOpenSource: false,
+  },
+  bedrockClaudeHaiku45EU: {
+    title: "Claude Haiku 4.5 (EU)",
+    description: "Fast frontier performance via AWS Bedrock (EU regions)",
+    params: {
+      model: "eu.anthropic.claude-haiku-4-5-20251001-v1:0",
+      contextLength: 200_000,
+    },
+    icon: "bedrock.png",
     isOpenSource: false,
   },
 

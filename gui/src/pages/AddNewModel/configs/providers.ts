@@ -55,10 +55,10 @@ export const providers: Partial<Record<string, ProviderInfo>> = {
     description: "Use Claude, Llama, and other models via AWS Bedrock",
     longDescription:
       "Access AI models through AWS Bedrock. Use IAM credentials (Access Key + Secret) or leave empty to use ~/.aws/credentials profile.",
-    icon: "anthropic.png",
+    icon: "bedrock.png",
     tags: [],
     params: {
-      region: "us-east-1",
+      region: "eu-west-3",
       profile: "bedrock",
     },
     collectInputFor: [
@@ -66,9 +66,9 @@ export const providers: Partial<Record<string, ProviderInfo>> = {
         inputType: "text",
         key: "region",
         label: "AWS Region",
-        placeholder: "us-east-1",
+        placeholder: "eu-west-3",
         required: true,
-        defaultValue: "us-east-1",
+        defaultValue: "eu-west-3",
       },
       {
         inputType: "text",
@@ -82,7 +82,7 @@ export const providers: Partial<Record<string, ProviderInfo>> = {
       {
         inputType: "text",
         key: "accessKeyId",
-        label: "Access Key ID (Optional)",
+        label: "Access Key ID",
         placeholder: "Leave empty to use profile",
         required: true,
         defaultValue: "",
@@ -90,7 +90,7 @@ export const providers: Partial<Record<string, ProviderInfo>> = {
       {
         inputType: "password",
         key: "secretAccessKey",
-        label: "Secret Key (Optional)",
+        label: "Secret Key",
         placeholder: "Leave empty to use profile",
         required: true,
         defaultValue: "",
@@ -98,7 +98,10 @@ export const providers: Partial<Record<string, ProviderInfo>> = {
       ...completionParamsInputsConfigs,
     ],
     packages: [
-      // Claude 4.5 models
+      // Claude 4.5 models - EU regions
+      models.bedrockClaudeSonnet45EU,
+      models.bedrockClaudeHaiku45EU,
+      // Claude 4.5 models - US regions
       models.bedrockClaudeSonnet45,
       models.bedrockClaudeHaiku45,
       // Llama models
