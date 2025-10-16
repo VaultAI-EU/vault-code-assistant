@@ -1,0 +1,98 @@
+# VaultAI Fork - Continue.dev Development Rules
+
+## Architecture Overview
+This is a fork of Continue.dev with VaultAI branding. The project consists of:
+- **core/**: Core TypeScript logic (LLM interactions, tools, etc.)
+- **extensions/vscode/**: VS Code extension
+- **gui/**: React GUI (built with Vite)
+- **packages/**: Shared packages (openai-adapters, etc.)
+
+## When to Rebuild
+
+### Always rebuild after modifying:
+1. **TypeScript files in `core/`** → Changes to LLM logic, tools, utilities
+2. **TypeScript files in `packages/`** → Changes to adapters, shared code
+3. **TypeScript files in `extensions/vscode/src/`** → Extension logic
+4. **React files in `gui/src/`** → GUI components, pages, branding
+
+### Rebuild Commands
+
+#### Full Rebuild (after TypeScript or GUI changes):
+```bash
+# 1. Build core
+cd core && npm run build
+
+# 2. Build VS Code extension
+cd ../extensions/vscode && npm run esbuild
+
+# 3. Build GUI (if GUI files were modified)
+cd ../../gui && npm run build
+
+# 4. Copy GUI to extension
+cd ../extensions/vscode && rm -rf gui && cp -r ../../gui/dist gui
+```
+
+#### Quick Rebuild (core + extension only):
+```bash
+cd core && npm run build && cd ../extensions/vscode && npm run esbuild
+```
+
+#### After changes, reload VS Code:
+- Stop the debugger completely (red stop button)
+- Press F5 to restart the extension with the new build
+
+## VaultAI Branding Files
+
+### DO NOT modify these without careful consideration:
+- `extensions/vscode/package.json` - Only modify using `scripts/vaultai/apply-branding.js`
+- Internal IDs must stay as "continue" for compatibility
+- Command IDs must remain `continue.*` to avoid breaking functionality
+
+### Safe to modify for branding:
+- `gui/src/components/svg/ContinueLogo.tsx` - VaultAI logo
+- `gui/src/**/*.tsx` - GUI strings, URLs to docs/hub
+- `vaultai/config/branding.ts` - Centralized branding config
+
+### URLs to replace:
+- `docs.continue.dev` → `docs.vaultai.eu`
+- `hub.continue.dev` → `hub.vaultai.eu`
+- Visible strings "Continue" → "VaultAI" (except in code/internal identifiers)
+
+## Common Fixes
+
+### Anthropic "text content blocks must be non-empty" error:
+Fixed in `core/llm/llms/Anthropic.ts` - all text blocks are validated and empty ones are replaced with a single space " ".
+
+### Extension not loading after changes:
+1. Check that you ran `npm run build` in `core/`
+2. Check that you ran `npm run esbuild` in `extensions/vscode/`
+3. Completely stop and restart the debugger (don't just reload)
+4. Check console for errors in VS Code Developer Tools
+
+## Git Workflow
+
+### Branches:
+- `main` - Stays 100% synced with upstream Continue.dev
+- `vaultai-main` - All VaultAI customizations (working branch)
+
+### Before committing:
+- Never commit to `main` directly
+- All VaultAI changes go to `vaultai-main`
+- Update `vaultai/VAULTAI_CHANGES.md` with modifications made
+
+## Testing Checklist
+
+After making changes, test:
+- [ ] Extension loads without errors
+- [ ] GUI displays VaultAI branding (logo, strings)
+- [ ] Chat works with configured models
+- [ ] Tool calls display "VaultAI" not "Continue"
+- [ ] URLs point to vaultai.eu domains
+- [ ] No console errors in VS Code Developer Tools
+
+## Performance Notes
+
+- TypeScript compilation is fast (~2-5 seconds)
+- GUI build is slower (~20-30 seconds) - only rebuild if GUI files changed
+- esbuild for extension is fast (~2-3 seconds)
+

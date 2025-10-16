@@ -180,20 +180,20 @@ export function HelpSection() {
           <Card className="!p-0">
             <div className="flex flex-col">
               <ConfigRow
-                title="Continue Hub"
-                description="Visit hub.continue.dev to explore custom agents and blocks"
+                title="VaultAI Hub"
+                description="Visit hub.vaultai.eu to explore custom agents and blocks"
                 icon={LinkIcon}
                 onClick={() =>
-                  ideMessenger.post("openUrl", "https://hub.continue.dev/")
+                  ideMessenger.post("openUrl", "https://hub.vaultai.eu/")
                 }
               />
 
               <ConfigRow
                 title="Documentation"
-                description="Learn how to configure and use Continue"
+                description="Learn how to configure and use VaultAI"
                 icon={LinkIcon}
                 onClick={() =>
-                  ideMessenger.post("openUrl", "https://docs.continue.dev/")
+                  ideMessenger.post("openUrl", "https://docs.vaultai.eu/")
                 }
               />
 

@@ -88,6 +88,15 @@ class Anthropic extends BaseLLM {
     content: MessageContent,
   ): ContentBlockParam[] {
     if (typeof content === "string") {
+      // Anthropic requires text blocks to be non-empty
+      if (!content || content.trim() === "") {
+        return [
+          {
+            type: "text",
+            text: " ",
+          },
+        ];
+      }
       return [
         {
           type: "text",
@@ -97,9 +106,11 @@ class Anthropic extends BaseLLM {
     }
     return content.map((part) => {
       if (part.type === "text") {
+        // Anthropic requires text blocks to be non-empty
+        const text = part.text && part.text.trim() !== "" ? part.text : " ";
         return {
           type: "text",
-          text: part.text,
+          text,
         };
       }
       return {
@@ -178,6 +189,19 @@ class Anthropic extends BaseLLM {
           if (block) {
             blocks.push(block);
           }
+        }
+        // Anthropic requires at least one text block in assistant messages
+        // If we only have tool_use blocks and no text, add a minimal text block
+        const hasOnlyToolUseBlocks =
+          blocks.length > 0 && blocks.every((b) => b.type === "tool_use");
+        if (hasOnlyToolUseBlocks) {
+          return [
+            {
+              type: "text",
+              text: " ",
+            },
+            ...blocks,
+          ];
         }
         return blocks;
       // system, etc.

@@ -248,6 +248,19 @@ export class AnthropicApi implements BaseLlmApi {
             blocks.push(block);
           }
         }
+        // Anthropic requires at least one text block in assistant messages
+        // If we only have tool_use blocks and no text, add a minimal text block
+        const hasOnlyToolUseBlocks =
+          blocks.length > 0 && blocks.every((b) => b.type === "tool_use");
+        if (hasOnlyToolUseBlocks) {
+          return [
+            {
+              type: "text",
+              text: " ",
+            },
+            ...blocks,
+          ];
+        }
         return blocks;
       // system, etc.
       default:

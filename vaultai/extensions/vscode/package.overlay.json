@@ -1,0 +1,29 @@
+{
+  "name": "vaultai-assistant",
+  "displayName": "VaultAI - On-premise AI Code Assistant",
+  "description": "Assistant de code IA on-premise pour entreprises avec souveraineté des données",
+  "version": "1.0.0",
+  "publisher": "VaultAI",
+  "author": "VaultAI SAS",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VaultAI/vault-code-assistant"
+  },
+  "bugs": {
+    "url": "https://github.com/VaultAI/vault-code-assistant/issues",
+    "email": "support@vaultai.eu"
+  },
+  "homepage": "https://vaultai.eu",
+  "keywords": [
+    "vaultai",
+    "ai",
+    "code assistant",
+    "on-premise",
+    "privacy",
+    "sovereignty",
+    "gpt",
+    "claude",
+    "coding"
+  ]
+}
