@@ -22,7 +22,14 @@ export function getNonce() {
 }
 
 export function getExtensionUri(): vscode.Uri {
-  return vscode.extensions.getExtension("Continue.continue")!.extensionUri;
+  // Dynamically get the extension ID from the current extension's package.json
+  const packageJson = require("../../package.json");
+  const extensionId = `${packageJson.publisher}.${packageJson.name}`;
+  const extension = vscode.extensions.getExtension(extensionId);
+  if (!extension) {
+    throw new Error(`Extension ${extensionId} not found`);
+  }
+  return extension.extensionUri;
 }
 
 export function getViewColumnOfFile(

@@ -1,27 +1,27 @@
 {
   "name": "continue",
   "icon": "media/icon.png",
-  "author": "Continue Dev, Inc",
+  "author": "VaultAI SAS",
   "version": "1.3.18",
   "repository": {
     "type": "git",
-    "url": "https://github.com/continuedev/continue"
+    "url": "https://github.com/VaultAI/vault-code-assistant"
   },
   "extensionKind": [
     "ui",
     "workspace"
   ],
   "bugs": {
-    "url": "https://github.com/continuedev/continue/issues",
-    "email": "nate@continue.dev"
+    "url": "https://github.com/VaultAI/vault-code-assistant/issues",
+    "email": "support@vaultai.eu"
   },
-  "homepage": "https://continue.dev",
+  "homepage": "https://vaultai.eu",
   "qna": "https://github.com/continuedev/continue/issues/new/choose",
   "license": "Apache-2.0",
-  "displayName": "VaultAI - open-source and secure AI code agent",
+  "displayName": "VaultAI - On-premise AI Code Assistant",
   "pricing": "Free",
-  "description": "The leading open-source AI code agent",
-  "publisher": "Continue",
+  "description": "Assistant de code IA on-premise pour entreprises avec souveraineté des données",
+  "publisher": "VaultAI",
   "engines": {
     "vscode": "^1.70.0",
     "node": ">=20.19.0"
@@ -40,15 +40,15 @@
     "Snippets"
   ],
   "keywords": [
-    "chatgpt",
-    "cline",
-    "roo",
-    "github",
-    "copilot",
+    "vaultai",
+    "ai",
+    "code assistant",
+    "on-premise",
+    "privacy",
+    "sovereignty",
+    "gpt",
     "claude",
-    "mistral",
-    "codestral",
-    "ai"
+    "coding"
   ],
   "activationEvents": [
     "onUri",
