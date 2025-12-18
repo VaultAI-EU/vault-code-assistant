@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Button, SecondaryButton } from "../..";
+import { Button } from "../..";
 import { useAuth } from "../../../context/Auth";
 import { IdeMessengerContext } from "../../../context/IdeMessenger";
 import { useCreditStatus } from "../../../hooks/useCredits";
@@ -21,6 +21,12 @@ export function OnboardingCardLanding({
   const auth = useAuth();
   const currentOrg = useAppSelector(selectCurrentOrg);
   const dispatch = useAppDispatch();
+
+  // VaultAI: Open config file directly
+  function handleConfigureModels() {
+    onboardingCard.close(isDialog);
+    ideMessenger.post("config/openProfile", { profileId: "local" });
+  }
 
   function onGetStarted() {
     void auth.login(true).then((success) => {
@@ -61,43 +67,14 @@ export function OnboardingCardLanding({
         <ContinueLogo height={75} />
       </div>
 
-      {outOfStarterCredits ? (
-        <>
-          <p className="xs:w-3/4 w-full text-sm">
-            You've used all your starter credits! Click below to purchase
-            credits or configure API keys
-          </p>
-          <SecondaryButton
-            onClick={openApiKeysPage}
-            className="mt-4 grid w-full grid-flow-col items-center gap-2"
-          >
-            Set up API keys
-          </SecondaryButton>
-          <Button
-            onClick={openBillingPage}
-            className="mt-4 grid w-full grid-flow-col items-center gap-2"
-          >
-            Purchase credits
-          </Button>
-        </>
-      ) : (
-        <>
-          <p className="mb-5 mt-0 w-full text-sm">
-            Log in to get up and running with starter credits
-          </p>
+      {/* VaultAI: Hide Continue Hub login and starter credits */}
+      <p className="mb-5 mt-0 w-full text-sm">
+        Configure your AI models to get started
+      </p>
 
-          <Button
-            onClick={onGetStarted}
-            className="mt-4 grid w-full grid-flow-col items-center gap-2"
-          >
-            Log in to Continue Hub
-          </Button>
-        </>
-      )}
-
-      <SecondaryButton onClick={onSelectConfigure} className="w-full">
-        Or, configure your own models
-      </SecondaryButton>
+      <Button onClick={handleConfigureModels} className="w-full">
+        Configure your own models
+      </Button>
     </div>
   );
 }

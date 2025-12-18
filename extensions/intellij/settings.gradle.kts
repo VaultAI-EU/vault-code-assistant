@@ -1,1 +1,1 @@
-rootProject.name = "continue-intellij-extension"
+rootProject.name = "vaultai-code-assistant-intellij"

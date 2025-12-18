@@ -306,11 +306,14 @@ class IdeProtocolClient(
                     }
 
                     "openFile" -> {
+                        println("[VAULTAI DEBUG] ⚙️ openFile handler triggered")
                         val params = Gson().fromJson(
                             dataElement.toString(),
                             OpenFileParams::class.java
                         )
+                        println("[VAULTAI DEBUG] ⚙️ Opening file: ${params.path}")
                         ide.openFile(params.path)
+                        println("[VAULTAI DEBUG] ⚙️ File opened successfully")
                         respond(null)
                     }
 

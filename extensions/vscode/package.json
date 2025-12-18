@@ -1,5 +1,5 @@
 {
-  "name": "continue",
+  "name": "vaultai-code-assistant",
   "icon": "media/icon.png",
   "author": "VaultAI SAS",
   "version": "1.3.18",
@@ -16,7 +16,7 @@
     "email": "support@vaultai.eu"
   },
   "homepage": "https://vaultai.eu",
-  "qna": "https://github.com/continuedev/continue/issues/new/choose",
+  "qna": "https://github.com/VaultAI/vault-code-assistant/issues/new/choose",
   "license": "Apache-2.0",
   "displayName": "VaultAI - On-premise AI Code Assistant",
   "pricing": "Free",
@@ -671,6 +671,8 @@
     "prepackage": "node scripts/prepackage.js",
     "package": "node scripts/package.js",
     "package-all": "node scripts/package-all.js",
+    "build": "bash scripts/build-all.sh",
+    "verify-build": "bash scripts/verify-build.sh",
     "package:pre-release": "node scripts/package.js --pre-release",
     "build:rust": "cargo-cp-artifact -ac sync sync.node -- cargo build --manifest-path ../../sync/Cargo.toml --message-format=json-render-diagnostics",
     "build-debug:rust": "npm run build:rust --",

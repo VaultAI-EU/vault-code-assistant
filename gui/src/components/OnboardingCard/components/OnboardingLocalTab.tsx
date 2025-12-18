@@ -126,7 +126,7 @@ export function OnboardingLocalTab({ isDialog }: OnboardingLocalTabProps) {
     submitOnboarding();
 
     ideMessenger.post("config/openProfile", {
-      profileId: undefined,
+      profileId: "local",
     });
 
     if (isDialog) {

@@ -4,12 +4,39 @@ name: VaultAI Release
 on:
   push:
     tags:
-      - 'v*-vaultai'
+      - "v*-vaultai"
 
 jobs:
-  build-and-release:
-    runs-on: macos-latest
-    timeout-minutes: 15
+  build-extension:
+    name: Build ${{ matrix.platform }}-${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        include:
+          # Windows builds
+          - os: windows-latest
+            platform: win32
+            arch: x64
+            npm_config_arch: x64
+          # Linux builds
+          - os: ubuntu-latest
+            platform: linux
+            arch: x64
+            npm_config_arch: x64
+          - os: ubuntu-latest
+            platform: linux
+            arch: arm64
+            npm_config_arch: arm64
+          # macOS builds
+          - os: macos-latest
+            platform: darwin
+            arch: x64
+            npm_config_arch: x64
+          - os: macos-latest
+            platform: darwin
+            arch: arm64
+            npm_config_arch: arm64
 
     steps:
       - uses: actions/checkout@v5
@@ -19,24 +46,60 @@ jobs:
       - name: Build VS Code extension
         uses: ./.github/actions/build-vscode-extension
         with:
-          platform: darwin
-          arch: arm64
-          npm_config_arch: arm64
+          platform: ${{ matrix.platform }}
+          arch: ${{ matrix.arch }}
+          npm_config_arch: ${{ matrix.npm_config_arch }}
           pre-release: false
           commit-sha: ${{ github.sha }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rename VSIX for VaultAI
+        shell: bash
+        run: |
+          cd extensions/vscode
+          VSIX_FILE=$(ls continue-*.vsix 2>/dev/null | head -n1 || echo "")
+          if [ -z "$VSIX_FILE" ]; then
+            echo "Error: No VSIX file found"
+            ls -la
+            exit 1
+          fi
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          NEW_NAME="vaultai-assistant-${TAG_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.vsix"
+          mv "$VSIX_FILE" "$NEW_NAME"
+          echo "VSIX_NAME=$NEW_NAME" >> $GITHUB_ENV
+          echo "Created: $NEW_NAME"
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsix-${{ matrix.platform }}-${{ matrix.arch }}
+          path: extensions/vscode/*.vsix
+          retention-days: 7
+
+  create-release:
+    name: Create GitHub Release
+    needs: build-extension
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
 
       - name: Get tag name
         id: tag_name
         run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Rename VSIX for VaultAI
+      - name: Download all VSIX artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: vsix-files
+          pattern: vsix-*
+          merge-multiple: true
+
+      - name: List downloaded files
         run: |
-          cd extensions/vscode
-          VSIX_FILE=$(ls continue-*.vsix | head -n1)
-          NEW_NAME="vaultai-assistant-${GITHUB_REF#refs/tags/v}.vsix"
-          mv "$VSIX_FILE" "$NEW_NAME"
-          echo "VSIX_NAME=$NEW_NAME" >> $GITHUB_ENV
+          echo "📦 Downloaded VSIX files:"
+          ls -lh vsix-files/
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -44,37 +107,49 @@ jobs:
           name: VaultAI Code Assistant ${{ steps.tag_name.outputs.TAG }}
           body: |
             # VaultAI Code Assistant ${{ steps.tag_name.outputs.TAG }} 🚀
-            
+
             Fork de Continue.dev avec branding VaultAI et support AWS Bedrock.
-            
+
             ## ✨ Nouveautés
-            
+
             - ✅ Branding VaultAI complet (logo, nom, URLs)
             - ✅ Support AWS Bedrock avec modèles Claude & Llama
             - ✅ Modèles régionaux (EU/US) pour AWS Bedrock
             - ✅ Fix Anthropic API (empty text blocks)
             - ✅ GUI customisée VaultAI
-            
+
             ## 📦 Installation
-            
-            **Télécharge le fichier `.vsix` ci-dessous:**
-            
-            1. Clique sur le fichier `.vsix` dans les Assets
-            2. Dans VS Code: `Cmd+Shift+P` → `Extensions: Install from VSIX...`
+
+            **Télécharge le fichier `.vsix` pour ta plateforme:**
+
+            ### Windows
+            - `vaultai-assistant-*-win32-x64.vsix` - Windows 64-bit
+
+            ### macOS
+            - `vaultai-assistant-*-darwin-arm64.vsix` - Apple Silicon (M1/M2/M3)
+            - `vaultai-assistant-*-darwin-x64.vsix` - Intel Mac
+
+            ### Linux
+            - `vaultai-assistant-*-linux-x64.vsix` - Linux 64-bit
+            - `vaultai-assistant-*-linux-arm64.vsix` - Linux ARM64
+
+            **Étapes d'installation:**
+
+            1. Télécharge le fichier `.vsix` correspondant à ta plateforme
+            2. Dans VS Code: `Cmd/Ctrl+Shift+P` → `Extensions: Install from VSIX...`
             3. Sélectionne le fichier téléchargé
             4. Recharge VS Code
-            
+
             ⚠️ **Note:** Ignore les fichiers "Source code" - ils sont ajoutés automatiquement par GitHub.
-            
+
             ## 🔧 Configuration AWS Bedrock
-            
+
             Après installation, configure AWS Bedrock:
             - Region: `eu-west-3` (ou ta région)
             - Profile: `bedrock` (de ~/.aws/credentials)
             - Access Key/Secret: optionnels
-          files: extensions/vscode/*.vsix
+          files: vsix-files/*.vsix
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

@@ -61,9 +61,15 @@ class FileUtils(
     }
 
     fun openFile(fileUri: String) {
+        System.err.println("[VAULTAI DEBUG] FileUtils.openFile called with: $fileUri")
         val found = findFile(fileUri)
-            ?: return
+        if (found == null) {
+            System.err.println("[VAULTAI DEBUG] File not found: $fileUri")
+            return
+        }
+        System.err.println("[VAULTAI DEBUG] Virtual file found, opening in editor")
         FileEditorManager.getInstance(project).openFile(found, true)
+        System.err.println("[VAULTAI DEBUG] File opened successfully")
     }
 
     fun saveFile(fileUri: String) {

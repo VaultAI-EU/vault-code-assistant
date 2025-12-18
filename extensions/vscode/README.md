@@ -1,59 +1,115 @@
-<div align="center">
-
-![Continue logo](media/readme.png)
+<h1 align="center">VaultAI Code Assistant</h1>
 
 <div align="center">
 
-<a target="_blank" href="https://opensource.org/licenses/Apache-2.0" style="background:none">
-    <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" style="height: 22px;" />
-</a>
-<a target="_blank" href="https://docs.continue.dev" style="background:none">
-    <img src="https://img.shields.io/badge/Continue-docs-%23BE1B55.svg?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNiAyNCIgZmlsbD0id2hpdGUiPgogIDxwYXRoIGQ9Ik0yMC41Mjg2IDMuMjY4MTFMMTkuMTUxMiA1LjY1Njk0TDIyLjYzMjggMTEuNjg0OUMyMi42NTgyIDExLjczMDYgMjIuNjczNSAxMS43ODY2IDIyLjY3MzUgMTEuODM3NEMyMi42NzM1IDExLjg4ODIgMjIuNjU4MiAxMS45NDQxIDIyLjYzMjggMTEuOTg5OUwxOS4xNTEyIDE4LjAyMjlMMjAuNTI4NiAyMC40MTE3TDI1LjQ3OTEgMTEuODM3NEwyMC41Mjg2IDMuMjYzMDNWMy4yNjgxMVpNMTguNjE3NiA1LjM0NjlMMTkuOTk1IDIuOTU4MDdIMTcuMjQwMkwxNS44NjI4IDUuMzQ2OUgxOC42MjI3SDE4LjYxNzZaTTE1Ljg1NzcgNS45NjY5N0wxOS4wNzUgMTEuNTMyNEgyMS44Mjk4TDE4LjYxNzYgNS45NjY5N0gxNS44NTc3Wk0xOC42MTc2IDE3LjcxNzlMMjEuODI5OCAxMi4xNDc0SDE5LjA3NUwxNS44NTc3IDE3LjcxNzlIMTguNjE3NlpNMTUuODU3NyAxOC4zMzhMMTcuMjM1MSAyMC43MTY3SDE5Ljk4OTlMMTguNjEyNSAxOC4zMzhIMTUuODUyNkgxNS44NTc3Wk02LjUyMDk4IDIxLjMwNjNDNi40NjUwNyAyMS4zMDYzIDYuNDE0MjQgMjEuMjkxIDYuMzY4NSAyMS4yNjU2QzYuMzIyNzYgMjEuMjQwMiA2LjI4MjA5IDIxLjE5OTUgNi4yNTY2OCAyMS4xNTM4TDIuNzcwMDIgMTUuMTIwN0gwLjAxNTI0ODJMNC45NjU3IDIzLjY5SDE0Ljg2MTVMMTMuNDg0MSAyMS4zMDYzSDYuNTI2MDZINi41MjA5OFpNMTQuMDE3OCAyMC45OTYyTDE1LjM5NTIgMjMuMzhMMTYuNzcyNiAyMC45OTExTDE1LjM5NTIgMTguNjAyM0wxNC4wMTc4IDIwLjk5MTFWMjAuOTk2MlpNMTQuODYxNSAxOC4yOTc0SDguNDM3MTJMNy4wNTk3MyAyMC42ODYySDEzLjQ4NDFMMTQuODYxNSAxOC4yOTc0Wk03Ljg5ODM2IDE3Ljk5MjRMNC42ODEwOCAxMi40MjE5TDMuMzAzNjkgMTQuODEwN0w2LjUyMDk4IDIwLjM4MTJMNy44OTgzNiAxNy45OTI0Wk0wLjAxMDE2NTQgMTQuNTAwN0gyLjc2NDk0TDQuMTQyMzIgMTIuMTExOEgxLjM5MjYzTDAuMDEwMTY1NCAxNC41MDA3Wk02LjI0MTQzIDIuNTQxM0M2LjI2Njg1IDIuNDk1NTYgNi4zMDc1MSAyLjQ1NDkgNi4zNTMyNSAyLjQyOTQ4QzYuMzk5IDIuNDA0MDcgNi40NTQ5IDIuMzg4ODIgNi41MDU3MyAyLjM4ODgySDEzLjQ3NEwxNC44NTE0IDBINC45NTA0NUwwIDguNTc0MzVIMi43NTQ3N0w2LjIzMTI3IDIuNTQ2MzhMNi4yNDE0MyAyLjU0MTNaTTQuMTQyMzIgMTEuNTc4MkwyLjc2NDk0IDkuMTg5MzRIMC4wMTAxNjU0TDEuMzg3NTUgMTEuNTc4Mkg0LjE0MjMyWk02LjUxMDgxIDMuMzEzODZMMy4yOTg2MSA4Ljg3OTNMNC42NzU5OSAxMS4yNjgxTDcuODg4MiA1LjcwMjY4TDYuNTEwODEgMy4zMTM4NlpNMTMuNDc5MSAzLjAwMzgySDcuMDQ0NDhMOC40MjE4NyA1LjM5MjY0SDE0Ljg1NjRMMTMuNDc5MSAzLjAwMzgyWk0xNS4zOTUyIDUuMDgyNkwxNi43Njc1IDIuNjk4ODZMMTUuMzk1MiAwLjMxMDAzOEwxNC4wMTc4IDIuNjkzNzhMMTUuMzk1MiA1LjA4MjZaIi8+Cjwvc3ZnPg==" style="height: 22px;" />
-</a>
-<a target="_blank" href="https://discord.gg/vapESyrFmJ" style="background:none">
-    <img src="https://img.shields.io/badge/discord-join-continue.svg?labelColor=191937&color=6F6FF7&logo=discord" style="height: 22px;" />
-</a>
+**On-premise AI Code Assistant for Enterprises**
 
-<p></p>
+**Data Sovereignty • Customizable • Multi-model Support**
+
+📚 [Documentation](https://docs.vaultai.eu) • 🌐 [Website](https://vaultai.eu) • 📄 [License: Apache 2.0](./LICENSE)
 
 </div>
 
-<h1 align="center">Continue</h1>
+---
 
-<div align="center">
+**🔒 Enterprise fork of [Continue.dev](https://github.com/continuedev/continue) with focus on data sovereignty**
 
-**Ship faster with Continuous AI**
+## 🚀 Features
 
-**Build and run custom agents across your IDE, terminal, and CI**
+### 💬 AI Chat
 
-</div>
+Ask questions about your code, get explanations and intelligent suggestions. Select code with `Cmd/Ctrl+L` and ask questions in the sidebar.
 
-## Agent
+### ✏️ Code Editing
 
-[Agent](https://docs.continue.dev/features/agent/quick-start) to work on development tasks together with AI
+Modify your code with natural language instructions. Press `Cmd/Ctrl+I` to edit code inline without leaving your file.
 
-![agent](docs/images/agent.gif)
+### ⚡ Autocomplete
 
-## Chat
+Receive inline code suggestions as you type. Press `Tab` to accept suggestions.
 
-[Chat](https://docs.continue.dev/features/chat/quick-start) to ask general questions and clarify code sections
+### 🤖 Autonomous Agents
 
-![chat](docs/images/chat.gif)
+Delegate complex development tasks to AI agents that work alongside you.
 
-## Edit
+## 🔐 Why VaultAI?
 
-[Edit](https://docs.continue.dev/features/edit/quick-start) to modify a code section without leaving your current file
+- **🏢 On-premise**: Your data stays in your infrastructure
+- **🔒 Data Sovereignty**: Full control over your models and data
+- **🎯 Customizable**: Adapt the assistant to your specific needs
+- **🌍 Multi-model**: Support for OpenAI, Anthropic, Mistral, LLaMA, and more
+- **🇪🇺 EU-focused**: Built for European enterprises with GDPR compliance in mind
 
-![edit](docs/images/edit.gif)
+## 📦 Installation
 
-## Autocomplete
+### Via VS Code Marketplace
 
-[Autocomplete](https://docs.continue.dev/features/autocomplete/quick-start) to receive inline code suggestions as you type
+1. Open VS Code
+2. Go to Extensions (`Cmd/Ctrl+Shift+X`)
+3. Search for "VaultAI"
+4. Click Install
 
-![autocomplete](docs/images/autocomplete.gif)
+### Via Command Line
 
-</div>
+```bash
+code --install-extension VaultAI.vaultai-code-assistant
+```
 
-## License
+## 🛠️ Quick Start
+
+1. **Open VaultAI**: Click the VaultAI icon in the sidebar
+2. **Configure your models**:
+   - Click the gear icon ⚙️ in the sidebar
+   - Add your API keys (OpenAI, Anthropic, Mistral, etc.)
+   - Or configure local models (Ollama, LM Studio, etc.)
+3. **Start coding**:
+   - Select code and press `Cmd/Ctrl+L` to chat
+   - Press `Cmd/Ctrl+I` to edit code inline
+   - Start typing to get autocomplete suggestions
+
+## ⌨️ Keyboard Shortcuts
+
+| Command                 | macOS         | Windows/Linux  |
+| ----------------------- | ------------- | -------------- |
+| Chat with selected code | `Cmd+L`       | `Ctrl+L`       |
+| Add code to chat        | `Cmd+Shift+L` | `Ctrl+Shift+L` |
+| Edit code inline        | `Cmd+I`       | `Ctrl+I`       |
+| Accept suggestion       | `Tab`         | `Tab`          |
+| Reject suggestion       | `Esc`         | `Esc`          |
+
+## 🔧 Supported Models
+
+### Cloud Providers
+
+- **OpenAI**: GPT-4, GPT-3.5
+- **Anthropic**: Claude 3 (Opus, Sonnet, Haiku)
+- **Mistral AI**: Mistral Large, Medium, Small
+- **Google**: Gemini Pro
+
+### On-premise / Local
+
+- **Ollama**: Run models locally (LLaMA, Mistral, CodeLLaMA, etc.)
+- **LM Studio**: Local model hosting
+- **OpenAI-compatible APIs**: Any API compatible with OpenAI format
+
+## 📚 Documentation
+
+- **Full Documentation**: [docs.vaultai.eu](https://docs.vaultai.eu)
+- **Configuration Guide**: [docs.vaultai.eu/setup](https://docs.vaultai.eu/setup)
+- **Model Setup**: [docs.vaultai.eu/models](https://docs.vaultai.eu/models)
+
+## 🤝 Support
+
+- 📧 Email: [support@vaultai.eu](mailto:support@vaultai.eu)
+- 🌐 Website: [vaultai.eu](https://vaultai.eu)
+- 🐛 Issues: [GitHub Issues](https://github.com/VaultAI/vault-code-assistant/issues)
+
+## 📄 License
 
 [Apache 2.0 © 2023-2025 Continue Dev, Inc.](./LICENSE)
+
+VaultAI Fork © 2024-2025 VaultAI SAS
+
+---
+
+**Powered by [Continue.dev](https://github.com/continuedev/continue) • Adapted for European Enterprises**

@@ -13,6 +13,8 @@ import com.intellij.ui.jcef.*
 import org.cef.CefApp
 import org.cef.browser.CefBrowser
 import org.cef.handler.CefLoadHandlerAdapter
+import org.cef.handler.CefDisplayHandlerAdapter
+import org.cef.browser.CefMessageRouter
 import javax.swing.JComponent
 
 class ContinueBrowser(private val project: Project): Disposable {
@@ -20,6 +22,10 @@ class ContinueBrowser(private val project: Project): Disposable {
     private val log = Logger.getInstance(ContinueBrowser::class.java.simpleName)
     private val browser: JBCefBrowser = JBCefBrowser.createBuilder().setOffScreenRendering(true).build()
     private val myJSQueryOpenInBrowser = JBCefJSQuery.create(browser as JBCefBrowserBase)
+    
+    // VaultAI: Queue messages until page is loaded
+    private var isPageLoaded = false
+    private val messageQueue = mutableListOf<Triple<String, Any?, String>>()
 
     init {
         CefApp.getInstance().registerSchemeHandlerFactory("http", "continue", CustomSchemeHandlerFactory())
@@ -56,8 +62,34 @@ class ContinueBrowser(private val project: Project): Disposable {
             null
         }
 
+        // Add console message handler to see webview logs
+        browser.jbCefClient.addDisplayHandler(object : CefDisplayHandlerAdapter() {
+            override fun onConsoleMessage(
+                browser: CefBrowser?,
+                level: org.cef.CefSettings.LogSeverity?,
+                message: String?,
+                source: String?,
+                line: Int
+            ): Boolean {
+                println("[WEBVIEW CONSOLE] $message")
+                return false
+            }
+        }, browser.cefBrowser)
+        
         browser.jbCefClient.addLoadHandler(OnPageLoad {
+            System.err.println("[VAULTAI DEBUG] Page loaded! Executing init JavaScript")
             executeJavaScript(myJSQueryOpenInBrowser)
+            // VaultAI: Mark page as loaded and flush queued messages
+            isPageLoaded = true
+            System.err.println("[VAULTAI DEBUG] Flushing ${messageQueue.size} queued messages")
+            synchronized(messageQueue) {
+                messageQueue.forEach { (messageType, data, messageId) ->
+                    System.err.println("[VAULTAI DEBUG] Flushing queued message: $messageType")
+                    sendToWebviewDirect(messageType, data, messageId)
+                }
+                messageQueue.clear()
+            }
+            System.err.println("[VAULTAI DEBUG] All messages flushed")
         }, browser.cefBrowser)
 
         // Load the url only after the protocolClient is initialized,
@@ -82,11 +114,28 @@ class ContinueBrowser(private val project: Project): Disposable {
     }
 
     fun sendToWebview(messageType: String, data: Any? = null, messageId: String = uuid()) {
+        System.err.println("[VAULTAI DEBUG] sendToWebview called: messageType=$messageType, isPageLoaded=$isPageLoaded")
+        // VaultAI: Queue messages if page is not loaded yet
+        if (!isPageLoaded) {
+            synchronized(messageQueue) {
+                messageQueue.add(Triple(messageType, data, messageId))
+            }
+            log.info("Queued message $messageType (page not loaded yet)")
+            System.err.println("[VAULTAI DEBUG] Message queued (page not loaded): $messageType")
+            return
+        }
+        sendToWebviewDirect(messageType, data, messageId)
+    }
+    
+    private fun sendToWebviewDirect(messageType: String, data: Any? = null, messageId: String = uuid()) {
         val json = Gson().toJson(BrowserMessage(messageType, messageId, data))
-        val jsCode = """window.postMessage($json, "*");"""
+        System.err.println("[VAULTAI DEBUG] Sending to webview: $json")
+        val jsCode = """window.postMessage($json, "*");""" 
         try {
             browser.executeJavaScriptAsync(jsCode)
+            System.err.println("[VAULTAI DEBUG] JavaScript executed successfully")
         } catch (error: IllegalStateException) {
+            System.err.println("[VAULTAI DEBUG] Failed to execute JavaScript: $error")
             log.warn(error)
         }
     }

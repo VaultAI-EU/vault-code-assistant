@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VaultAI Branding Overlay for plugin.xml -->
+<idea-plugin>
+    <!-- ID MUST stay as Continue's for code compatibility -->
+    <id>com.github.continuedev.continueintellijextension</id>
+    <name>VaultAI Assistant</name>
+    <vendor url="https://vaultai.eu">VaultAI</vendor>
+    <change-notes>
+        <![CDATA[View the latest release notes on <a href="https://github.com/VaultAI/vault-code-assistant/releases">GitHub</a>]]>
+    </change-notes>
+    
+    <!-- Extensions to override -->
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Override toolWindow to change display name -->
+        <toolWindow id="Continue" displayName="VaultAI" anchor="right" 
+                    icon="com.github.continuedev.continueintellijextension.Icons.Continue" 
+                    factoryClass="com.github.continuedev.continueintellijextension.toolWindow.ContinuePluginToolWindowFactory"/>
+    </extensions>
+</idea-plugin>
+

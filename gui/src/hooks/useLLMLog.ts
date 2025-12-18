@@ -11,8 +11,7 @@ import {
 } from "core";
 import { useEffect, useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
-
-declare const vscode: any;
+import { postMessageToIde } from "../utils/postMessage";
 
 export type LLMResult = LLMInteractionMessage | LLMInteractionChunk;
 
@@ -241,10 +240,13 @@ export default function useLLMLog() {
       dispatchLlmLog(event.data);
     };
     window.addEventListener("message", onMessage);
-    vscode.postMessage({ type: "start", uuid });
+    postMessageToIde({ messageType: "llm/log", data: { type: "start", uuid } });
 
     return () => {
-      vscode.postMessage({ type: "stop", uuid });
+      postMessageToIde({
+        messageType: "llm/log",
+        data: { type: "stop", uuid },
+      });
       window.removeEventListener("message", onMessage);
     };
   }, []);

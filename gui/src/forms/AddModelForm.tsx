@@ -300,7 +300,7 @@ export function AddModelForm({
                 className="cursor-pointer underline hover:brightness-125"
                 onClick={() =>
                   ideMessenger.post("config/openProfile", {
-                    profileId: undefined,
+                    profileId: "local",
                   })
                 }
               >

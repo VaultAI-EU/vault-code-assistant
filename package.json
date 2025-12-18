@@ -1,5 +1,5 @@
 {
-  "name": "continue",
+  "name": "vaultai-code-assistant",
   "scripts": {
     "tsc:watch": "concurrently -n gui,vscode,core,binary -c cyan,magenta,yellow,green \"npm run tsc:watch:gui\" \"npm run tsc:watch:vscode\" \"npm run tsc:watch:core\" \"npm run tsc:watch:binary\"",
     "tsc:watch:gui": "tsc --project gui/tsconfig.json --watch --noEmit --pretty",
@@ -22,5 +22,8 @@
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "xml2js": "^0.6.2"
   }
 }

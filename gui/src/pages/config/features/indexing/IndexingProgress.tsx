@@ -100,7 +100,7 @@ function IndexingProgress() {
         break;
       case "disabled":
         ideMessenger.post("config/openProfile", {
-          profileId: undefined,
+          profileId: "local",
         });
         break;
       case "done":

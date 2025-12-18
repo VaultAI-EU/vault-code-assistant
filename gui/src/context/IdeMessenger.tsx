@@ -15,7 +15,7 @@ import {
 } from "core/protocol/util";
 import { createContext } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { isJetBrains } from "../util";
+import { postMessageToIde as postToIde } from "../utils/postMessage";
 
 interface vscode {
   postMessage(message: any): vscode;
@@ -80,35 +80,20 @@ export class IdeMessenger implements IIdeMessenger {
     data: any,
     messageId: string = uuidv4(),
   ) {
-    if (typeof vscode === "undefined") {
-      if (isJetBrains()) {
-        if (window.postIntellijMessage === undefined) {
-          console.log(
-            "Unable to send message: postIntellijMessage is undefined. ",
-            messageType,
-            data,
-          );
-          throw new Error("postIntellijMessage is undefined");
-        }
-        window.postIntellijMessage?.(messageType, data, messageId);
-        return;
-      } else {
-        console.log(
-          "Unable to send message: vscode is undefined",
-          messageType,
-          data,
-        );
-        return;
-      }
-    }
-
-    const msg: Message = {
-      messageId,
-      messageType,
+    console.log(
+      `[VAULTAI DEBUG] ⚙️ _postToIde called - messageType: ${messageType}`,
       data,
-    };
+    );
 
-    vscode.postMessage(msg);
+    // Use the centralized postMessage utility
+    const success = postToIde({ messageType, data, messageId });
+
+    if (!success) {
+      console.error(
+        `[VAULTAI DEBUG] ⚙️ ERROR: Failed to send message: ${messageType}`,
+        data,
+      );
+    }
   }
 
   post<T extends keyof FromWebviewProtocol>(

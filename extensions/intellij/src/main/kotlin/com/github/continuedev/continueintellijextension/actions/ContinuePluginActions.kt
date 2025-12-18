@@ -85,7 +85,11 @@ class ViewHistoryAction : ContinueToolbarAction() {
 
 class OpenConfigAction : ContinueToolbarAction() {
     override fun toolbarActionPerformed(project: Project)  {
-        project.getBrowser()?.sendToWebview("navigateTo", mapOf("path" to "/config", "toggle" to true))
+        System.err.println("[VAULTAI DEBUG] OpenConfigAction clicked!")
+        val browser = project.getBrowser()
+        System.err.println("[VAULTAI DEBUG] Browser instance: $browser")
+        browser?.sendToWebview("navigateTo", mapOf("path" to "/config", "toggle" to true))
+        System.err.println("[VAULTAI DEBUG] sendToWebview called for navigateTo")
     }
 }
 

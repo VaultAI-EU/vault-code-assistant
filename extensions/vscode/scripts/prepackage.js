@@ -23,9 +23,59 @@ fs.mkdirSync(path.join(__dirname, "..", "out", "node_modules"), {
   recursive: true,
 });
 const guiDist = path.join(__dirname, "..", "..", "..", "gui", "dist");
+
+// Check if GUI has been built
 if (!fs.existsSync(guiDist)) {
-  fs.mkdirSync(guiDist, { recursive: true });
+  console.error(
+    "\n" +
+      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+      "❌ ERROR: GUI build not found!\n" +
+      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+      "\n" +
+      "The GUI (React app) must be built before packaging the extension.\n" +
+      "\n" +
+      "Please run:\n" +
+      "  cd gui/\n" +
+      "  npm install\n" +
+      "  npm run build\n" +
+      "\n" +
+      "Or use the automated build script:\n" +
+      "  ./scripts/build-all.sh      (Linux/macOS)\n" +
+      "  .\\scripts\\build-all.ps1    (Windows)\n" +
+      "\n" +
+      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
+  );
+  process.exit(1);
 }
+
+// Verify GUI build is complete
+const guiIndexJs = path.join(guiDist, "assets", "index.js");
+const guiIndexCss = path.join(guiDist, "assets", "index.css");
+
+if (!fs.existsSync(guiIndexJs) || !fs.existsSync(guiIndexCss)) {
+  console.error(
+    "\n" +
+      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+      "❌ ERROR: GUI build is incomplete!\n" +
+      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+      "\n" +
+      "The GUI build exists but is missing required files:\n" +
+      `  ${!fs.existsSync(guiIndexJs) ? "❌" : "✅"} ${guiIndexJs}\n` +
+      `  ${!fs.existsSync(guiIndexCss) ? "❌" : "✅"} ${guiIndexCss}\n` +
+      "\n" +
+      "Please rebuild the GUI:\n" +
+      "  cd gui/\n" +
+      "  rm -rf dist/\n" +
+      "  npm run build\n" +
+      "\n" +
+      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
+  );
+  process.exit(1);
+}
+
+console.log("[info] ✅ GUI build verified:");
+console.log(`[info]   - ${guiIndexJs}`);
+console.log(`[info]   - ${guiIndexCss}`);
 
 const skipInstalls = process.env.SKIP_INSTALLS === "true";
 
@@ -289,23 +339,29 @@ void (async () => {
   });
 
   if (!skipInstalls) {
-    // GitHub Actions doesn't support ARM, so we need to download pre-saved binaries
-    // 02/07/25 - the above comment is out of date, there is now support for ARM runners on GitHub Actions
-    if (isArmTarget) {
+    // Download platform-specific binaries when cross-compiling
+    if (isArmTarget || isWinTarget || isLinuxTarget) {
       // lancedb binary
       const packageToInstall = {
         "darwin-arm64": "@lancedb/vectordb-darwin-arm64",
         "linux-arm64": "@lancedb/vectordb-linux-arm64-gnu",
+        "linux-x64": "@lancedb/vectordb-linux-x64-gnu",
         "win32-arm64": "@lancedb/vectordb-win32-arm64-msvc",
+        "win32-x64": "@lancedb/vectordb-win32-x64-msvc",
       }[target];
-      console.log(
-        "[info] Downloading pre-built lancedb binary: " + packageToInstall,
-      );
 
-      await Promise.all([
-        copySqlite(target),
-        installAndCopyNodeModules(packageToInstall, "@lancedb"),
-      ]);
+      if (packageToInstall) {
+        console.log(
+          "[info] Downloading pre-built lancedb binary: " + packageToInstall,
+        );
+
+        await Promise.all([
+          copySqlite(target),
+          installAndCopyNodeModules(packageToInstall, "@lancedb"),
+        ]);
+      } else {
+        console.warn(`[warn] No lancedb package defined for target: ${target}`);
+      }
     }
   }
 
@@ -372,6 +428,45 @@ void (async () => {
   );
 
   console.log(`[info] Copied ${NODE_MODULES_TO_COPY.join(", ")}`);
+
+  // Fix ripgrep binary name for Windows when building on Unix
+  if (isWinTarget) {
+    const rgSource = "node_modules/@vscode/ripgrep/bin/rg";
+    const rgDest = "node_modules/@vscode/ripgrep/bin/rg.exe";
+    const rgSourceOut = "out/node_modules/@vscode/ripgrep/bin/rg";
+    const rgDestOut = "out/node_modules/@vscode/ripgrep/bin/rg.exe";
+
+    // Copy rg to rg.exe in node_modules
+    if (fs.existsSync(rgSource) && !fs.existsSync(rgDest)) {
+      fs.copyFileSync(rgSource, rgDest);
+      console.log("[info] Created rg.exe from rg in node_modules");
+    }
+
+    // Copy rg to rg.exe in out/node_modules
+    if (fs.existsSync(rgSourceOut) && !fs.existsSync(rgDestOut)) {
+      fs.copyFileSync(rgSourceOut, rgDestOut);
+      console.log("[info] Created rg.exe from rg in out/node_modules");
+    }
+  }
+
+  // Manual copy of LanceDB binary (ncp doesn't always copy large binaries correctly)
+  const lancedbBinaryPath = `node_modules/@lancedb/vectordb-${target}${isWinTarget ? "-msvc" : ""}${isLinuxTarget ? "-gnu" : ""}/index.node`;
+  const lancedbBinaryDest = `out/node_modules/@lancedb/vectordb-${target}${isWinTarget ? "-msvc" : ""}${isLinuxTarget ? "-gnu" : ""}/index.node`;
+
+  if (fs.existsSync(lancedbBinaryPath)) {
+    try {
+      fs.copyFileSync(lancedbBinaryPath, lancedbBinaryDest);
+      console.log(
+        `[info] Manually copied LanceDB binary: ${lancedbBinaryDest}`,
+      );
+    } catch (e) {
+      console.warn(
+        `[warn] Failed to manually copy LanceDB binary: ${e.message}`,
+      );
+    }
+  } else {
+    console.warn(`[warn] LanceDB binary not found at: ${lancedbBinaryPath}`);
+  }
 
   // Copy over any worker files
   fs.cpSync(

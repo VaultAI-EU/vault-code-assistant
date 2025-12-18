@@ -475,8 +475,37 @@ const getCommandsMap: (
     "continue.applyCodeFromChat": () => {
       void sidebar.webviewProtocol.request("applyCodeFromChat", undefined);
     },
-    "continue.openConfigPage": () => {
-      vscode.commands.executeCommand("continue.navigateTo", "/config", false);
+    "continue.openConfigPage": async () => {
+      // Retry si la commande navigateTo n'est pas encore disponible
+      const maxRetries = 5;
+      let retries = 0;
+      while (retries < maxRetries) {
+        try {
+          await vscode.commands.executeCommand(
+            "continue.navigateTo",
+            "/config",
+            false,
+          );
+          return;
+        } catch (error) {
+          retries++;
+          if (retries >= maxRetries) {
+            console.error(
+              "Failed to execute continue.navigateTo command:",
+              error,
+            );
+            // Fallback: essayer d'ouvrir directement via le webview protocol
+            sidebar.webviewProtocol?.request("navigateTo", {
+              path: "/config",
+              toggle: false,
+            });
+            focusGUI();
+            return;
+          }
+          // Attendre un peu avant de réessayer
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+      }
     },
     "continue.selectFilesAsContext": async (
       firstUri: vscode.Uri,

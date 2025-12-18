@@ -199,6 +199,28 @@ export class ContinueConsoleWebviewViewProvider
         <link href="${styleMainUri}" rel="stylesheet">
 
         <title>Continue</title>
+        <script>
+          // Désactiver l'enregistrement du service worker pour éviter les erreurs de permissions
+          // VS Code peut essayer d'enregistrer un service worker automatiquement
+          if ('serviceWorker' in navigator) {
+            // Empêcher l'enregistrement automatique du service worker
+            const originalRegister = navigator.serviceWorker.register;
+            navigator.serviceWorker.register = function() {
+              return Promise.reject(new Error('Service worker registration disabled for VS Code webview'));
+            };
+            
+            // Supprimer les service workers existants s'ils existent
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              for(let registration of registrations) {
+                registration.unregister().catch(() => {
+                  // Ignorer les erreurs de désenregistrement
+                });
+              }
+            }).catch(() => {
+              // Ignorer les erreurs si getRegistrations échoue
+            });
+          }
+        </script>
       </head>
       <body>
         <div id="root"></div>
